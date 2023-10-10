@@ -3,7 +3,7 @@ import aiohttp
 import csv
 from bs4 import BeautifulSoup
 import time
-'''hello'''
+
 headers = {
     'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'
 }
@@ -64,14 +64,14 @@ async def scrapProductDetails(session, url, listOfDict):
             dict1["DESCRIPTION"] = listofdes
     return dict1
 
-async def writeInFile(listOfDict):
+def writeInFile(listOfDict):
     fieldnames = listOfDict[0].keys()
-    async with open("C:\\Users\\DELL\\OneDrive\\Desktop\\begineerpython\\pythonbeginner\\webscrap7.csv", mode="a", encoding="utf-8") as file:
+    with open("/home/ongraph/Desktop/practice/web23444.csv", mode="a", encoding="utf-8") as file:
         productfile = csv.DictWriter(file, fieldnames=fieldnames)
         if file.tell() == 0:
             productfile.writeheader()
         for item in listOfDict:
-            await productfile.writerow(item)
+            productfile.writerow(item)
     return f"Wrote results for 20 products in file"
 
 async def getAllPagesHref(keyword, no_of_pages, session):
@@ -116,21 +116,20 @@ async def fetchEveryPageProductHref(listOfEveryPageUrls, session):
                 url = f"{prefix}{link}"
                 listOfProductLinks.append(url)
                 if len(listOfProductLinks) >= index + 20:
-                    result_for_20_multiprocess_product = await doAsyncProcessing(listOfProductLinks[index:index + 20])
+                    result_for_20_multiprocess_product = await doAsyncProcessing(session,listOfProductLinks[index:index + 20])
                     print(result_for_20_multiprocess_product)
                     index = index + 20
     return f"Scrapped the details of {len(listOfProductLinks)} products"
 
-async def doAsyncProcessing(listOfProductLinks):
+async def doAsyncProcessing(session,listOfProductLinks):
     tasks = []
     listOfDict=[]
-    async with aiohttp.ClientSession() as session:
-        for url in listOfProductLinks:
-            task = asyncio.create_task(scrapProductDetails(session, url, listOfDict))
-            tasks.append(task)
+    for url in listOfProductLinks:
+        task = asyncio.create_task(scrapProductDetails(session, url, listOfDict))
+        tasks.append(task)
     listOfDict= await asyncio.gather(*tasks)
     print(listOfDict)
-    result= await writeInFile(listOfDict)
+    result= writeInFile(listOfDict)
     print(result)
     listOfDict[:] = []
     return f"Async processed completed for 20 products"
@@ -145,6 +144,6 @@ async def enterKeyword():
     elapsed = time.perf_counter() - start
     return f"{elapsed} sec spent on scrapping the result"
 
-if __name__ == "_main_":
+if __name__== "__main__":
     result=asyncio.run(enterKeyword())
     print(result)

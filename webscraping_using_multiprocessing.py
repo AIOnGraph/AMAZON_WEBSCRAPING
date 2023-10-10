@@ -66,7 +66,7 @@ def scrapProductDetails(url):
 
 def writeInFile(listOfDict):
     with lock:
-        with open("/home/ongraph/Desktop/practice/webscrap06.csv", mode="a", encoding="utf-8") as file:
+        with open("/home/ongraph/Desktop/practice/webscrap061.csv", mode="a", encoding="utf-8") as file:
             fieldnames = listOfDict[0].keys()
             productfile = csv.DictWriter(file, fieldnames=fieldnames)
             if file.tell() == 0:  
@@ -84,7 +84,6 @@ def getAllPagesHref(keyword,no_of_pages):
     hrefsclass = soup1.find_all(class_="a-link-normal s-underline-text s-underline-link-text s-link-style a-text-normal")
     if hrefsclass:
         maxPages = int(soup1.find(class_="s-pagination-item s-pagination-disabled").text)
-        print(maxPages)
         if no_of_pages is None:
             no_of_pages = maxPages  
         elif 1 <= no_of_pages <= maxPages:

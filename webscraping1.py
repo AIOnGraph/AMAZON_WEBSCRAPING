@@ -66,9 +66,9 @@ def writeInFile(dict1):
             productfile.writeheader()
             count = count + 1
         productfile.writerow(dict1)
-    return f"Wrote results for 1 products in file"
+    return f"Wrote results for  product in file"
 
-def getAllPagesHref(keyword):
+def getAllPagesHref(keyword,no_of_pages):
     listOfEveryPageUrls = []
     url = f"https://www.amazon.in/s?k={keyword}&page=1"
     res = requests.get(url, headers=headers)
@@ -77,7 +77,6 @@ def getAllPagesHref(keyword):
     hrefsclass = soup1.find_all(class_="a-link-normal s-underline-text s-underline-link-text s-link-style a-text-normal")
     if hrefsclass:
         maxPages = int(soup1.find(class_="s-pagination-item s-pagination-disabled").text)
-        print(maxPages)
         if no_of_pages is None:
             no_of_pages = maxPages  
         elif 1 <= no_of_pages <= maxPages:

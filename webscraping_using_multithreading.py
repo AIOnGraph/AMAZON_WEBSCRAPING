@@ -59,8 +59,7 @@ def scrapProductDetails(url):
         dict1["RATING"]=rating
         dict1["DESCRIPTION"]=listofdes
         listOfDict.append(dict1)
-
-        if len(listOfDict)>=20: 
+        if len(listOfDict)>=19: 
             with lock:
                 result=writeInFile(listOfDict)
                 listOfDict.clear()
@@ -78,7 +77,7 @@ def writeInFile(listOfDict):
             count = count + 1
         for item in listOfDict:  
             productfile.writerow(item)
-    return f"Wrote results for 20 products in file"
+    return f"Wrote results for 19 products in file"
 
 
 def getAllPagesHref(keyword,no_of_pages):
@@ -90,7 +89,6 @@ def getAllPagesHref(keyword,no_of_pages):
     hrefsclass = soup1.find_all(class_="a-link-normal s-underline-text s-underline-link-text s-link-style a-text-normal")
     if hrefsclass:
         maxPages = int(soup1.find(class_="s-pagination-item s-pagination-disabled").text)
-        print(maxPages)
         if no_of_pages is None:
             no_of_pages = maxPages  
         elif 1 <= no_of_pages <= maxPages:
@@ -136,7 +134,7 @@ def doMultithreading(listOfProductLinks):
         results = [executor.submit(scrapProductDetails, productlink) for productlink in listOfProductLinks]
         concurrent.futures.wait(results)
 
-    return f"Multithreading completed for 20 products"
+    return f"Multithreading completed for current batch"
         
 
 
